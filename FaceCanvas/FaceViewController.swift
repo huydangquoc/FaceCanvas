@@ -21,10 +21,12 @@ class FaceViewController: UIViewController {
     var cloneFaceOriginalCenter: CGPoint!
     var cloneFaceOriginalTransform: CGAffineTransform!
     var downArrowOriginalTransform: CGAffineTransform!
+    var yOfFullHeight: CGFloat!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        yOfFullHeight = view.frame.height - trayView.frame.height
         trayOpenPoint = trayView.center
         trayClosedPoint = CGPoint(x: trayOpenPoint.x, y: trayOpenPoint.y + trayView.frame.height - 25)
         trayView.center = trayClosedPoint
@@ -39,7 +41,13 @@ class FaceViewController: UIViewController {
             
         case .Changed:
             let translation = sender.translationInView(view)
-            trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
+            let point = sender.locationInView(view)
+            // pull up so high
+            if point.y < yOfFullHeight {
+                trayView.center = CGPoint(x: trayOpenPoint.x, y: trayOpenPoint.y + (point.y - yOfFullHeight) / 10)
+            } else {
+                trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
+            }
             
         case .Ended:
             let velocity = sender.velocityInView(view)

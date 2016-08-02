@@ -15,6 +15,8 @@ class FaceViewController: UIViewController {
     var trayOriginalCenter: CGPoint!
     var trayOpenPoint: CGPoint!
     var trayClosedPoint: CGPoint!
+    var newlyCreatedFace: UIImageView!
+    var newlyCreatedFaceOriginalCenter: CGPoint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,4 +54,27 @@ class FaceViewController: UIViewController {
             break
         }
     }
+    
+    @IBAction func onFacePanGesture(sender: UIPanGestureRecognizer) {
+        
+        switch sender.state {
+        case .Began:
+            let imageView = sender.view as! UIImageView
+            newlyCreatedFace = UIImageView(image: imageView.image)
+            view.addSubview(newlyCreatedFace)
+            newlyCreatedFace.center = imageView.center
+            newlyCreatedFace.center.x += trayView.frame.origin.x
+            newlyCreatedFace.center.y += trayView.frame.origin.y
+            newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
+            
+        case .Changed:
+            let translation = sender.translationInView(view)
+            newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x,
+                                              y: newlyCreatedFaceOriginalCenter.y + translation.y)
+            
+        default:
+            break
+        }
+    }
+    
 }

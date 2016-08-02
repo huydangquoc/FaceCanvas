@@ -81,6 +81,10 @@ class FaceViewController: UIViewController {
             newlyCreatedFace.userInteractionEnabled = true
             newlyCreatedFace.addGestureRecognizer(panGestureRecognizer)
             
+            // add pinch gesture for new image
+            let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(FaceViewController.onCloneFacePinchGesture(_:)))
+            newlyCreatedFace.addGestureRecognizer(pinchGestureRecognizer)
+            
         case .Changed:
             let translation = sender.translationInView(view)
             newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x,
@@ -110,5 +114,10 @@ class FaceViewController: UIViewController {
         default:
             break
         }
+    }
+    
+    func onCloneFacePinchGesture(sender: UIPinchGestureRecognizer) {
+        sender.view!.transform = CGAffineTransformScale(sender.view!.transform, sender.scale, sender.scale)
+        sender.scale = 1
     }
 }

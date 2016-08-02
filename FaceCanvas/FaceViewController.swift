@@ -92,6 +92,10 @@ class FaceViewController: UIViewController {
             let rotateGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(FaceViewController.onCloneFaceRotateGesture(_:)))
             newlyCreatedFace.addGestureRecognizer(rotateGestureRecognizer)
             rotateGestureRecognizer.delegate = self
+            // add tap gesture for new image
+            let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(FaceViewController.onCloneFaceTapGesture(_:)))
+            tapGestureRecognizer.numberOfTapsRequired = 2
+            newlyCreatedFace.addGestureRecognizer(tapGestureRecognizer)
             
         case .Changed:
             let translation = sender.translationInView(view)
@@ -152,6 +156,11 @@ class FaceViewController: UIViewController {
             targetView.transform = CGAffineTransformRotate(targetView.transform, sender.rotation)
             sender.rotation = 0
         }
+    }
+    
+    func onCloneFaceTapGesture(sender: UITapGestureRecognizer) {
+        
+        sender.view!.removeFromSuperview()
     }
 }
 

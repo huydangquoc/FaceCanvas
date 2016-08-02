@@ -13,28 +13,40 @@ class FaceViewController: UIViewController {
     @IBOutlet weak var trayView: UIView!
     
     var trayOriginalCenter: CGPoint!
+    var trayOpenPoint: CGPoint!
+    var trayClosedPoint: CGPoint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        trayOpenPoint = trayView.center
+        trayClosedPoint = CGPoint(x: trayOpenPoint.x, y: trayOpenPoint.y + trayView.frame.height - 25)
+        trayView.center = trayClosedPoint
     }
 
     @IBAction func onTrayPanGesture(sender: UIPanGestureRecognizer) {
-        
-        let point = sender.locationInView(view)
-        let velocity = sender.velocityInView(view)
-        let translation = sender.translationInView(view)
         
         switch sender.state {
         case .Began:
             trayOriginalCenter = trayView.center
             
         case .Changed:
+            let translation = sender.translationInView(view)
             trayView.center = CGPoint(x: trayOriginalCenter.x, y: trayOriginalCenter.y + translation.y)
             
         case .Ended:
-            break
+            let velocity = sender.velocityInView(view)
+            var point: CGPoint
+            // go down
+            if velocity.y > 0 {
+                point = trayClosedPoint
+            // go up
+            } else {
+                point = trayOpenPoint
+            }
+            UIView.animateWithDuration(0.6, animations: {
+                self.trayView.center = point
+            })
             
         default:
             break

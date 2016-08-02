@@ -11,6 +11,7 @@ import UIKit
 class FaceViewController: UIViewController {
     
     @IBOutlet weak var trayView: UIView!
+    @IBOutlet weak var downArrowView: UIImageView!
     
     var trayOriginalCenter: CGPoint!
     var trayOpenPoint: CGPoint!
@@ -19,6 +20,7 @@ class FaceViewController: UIViewController {
     var newlyCreatedFaceOriginalCenter: CGPoint!
     var cloneFaceOriginalCenter: CGPoint!
     var cloneFaceOriginalTransform: CGAffineTransform!
+    var downArrowOriginalTransform: CGAffineTransform!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +28,7 @@ class FaceViewController: UIViewController {
         trayOpenPoint = trayView.center
         trayClosedPoint = CGPoint(x: trayOpenPoint.x, y: trayOpenPoint.y + trayView.frame.height - 25)
         trayView.center = trayClosedPoint
+        downArrowOriginalTransform = downArrowView.transform
     }
 
     @IBAction func onTrayPanGesture(sender: UIPanGestureRecognizer) {
@@ -41,15 +44,19 @@ class FaceViewController: UIViewController {
         case .Ended:
             let velocity = sender.velocityInView(view)
             var point: CGPoint
+            var downArrowTransform: CGAffineTransform
             // go down
             if velocity.y > 0 {
                 point = trayClosedPoint
+                downArrowTransform = downArrowOriginalTransform
             // go up
             } else {
                 point = trayOpenPoint
+                downArrowTransform = CGAffineTransformMakeRotation(CGFloat(M_PI))
             }
             UIView.animateWithDuration(0.6, animations: {
                 self.trayView.center = point
+                self.downArrowView.transform = downArrowTransform
             })
             
         default:

@@ -80,6 +80,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
+                        <outlet property="downArrowView" destination="5is-S3-ux0" id="gjy-pV-GaL"/>
                         <outlet property="trayView" destination="DjU-UZ-lYy" id="ORh-VP-lom"/>
                     </connections>
                 </viewController>

@@ -64,7 +64,6 @@ class FaceViewController: UIViewController {
             // duplicate face
             let imageView = sender.view as! UIImageView
             newlyCreatedFace = UIImageView(image: imageView.image)
-            
             // add to view controller
             view.addSubview(newlyCreatedFace)
             
@@ -72,7 +71,6 @@ class FaceViewController: UIViewController {
             newlyCreatedFace.center = imageView.center
             newlyCreatedFace.center.x += trayView.frame.origin.x
             newlyCreatedFace.center.y += trayView.frame.origin.y
-            
             // keep original point for later calculation
             newlyCreatedFaceOriginalCenter = newlyCreatedFace.center
             
@@ -80,10 +78,13 @@ class FaceViewController: UIViewController {
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(FaceViewController.onCloneFacePanGesture(_:)))
             newlyCreatedFace.userInteractionEnabled = true
             newlyCreatedFace.addGestureRecognizer(panGestureRecognizer)
-            
             // add pinch gesture for new image
             let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(FaceViewController.onCloneFacePinchGesture(_:)))
             newlyCreatedFace.addGestureRecognizer(pinchGestureRecognizer)
+            // add rotate gesture for new image
+            let rotateGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(FaceViewController.onCloneFaceRotateGesture(_:)))
+            newlyCreatedFace.addGestureRecognizer(rotateGestureRecognizer)
+            rotateGestureRecognizer.delegate = self
             
         case .Changed:
             let translation = sender.translationInView(view)
@@ -117,7 +118,26 @@ class FaceViewController: UIViewController {
     }
     
     func onCloneFacePinchGesture(sender: UIPinchGestureRecognizer) {
-        sender.view!.transform = CGAffineTransformScale(sender.view!.transform, sender.scale, sender.scale)
-        sender.scale = 1
+        
+        if let targetView = sender.view {
+            targetView.transform = CGAffineTransformScale(targetView.transform, sender.scale, sender.scale)
+            sender.scale = 1
+        }
+    }
+    
+    func onCloneFaceRotateGesture(sender: UIRotationGestureRecognizer) {
+        
+        if let targetView = sender.view {
+            targetView.transform = CGAffineTransformRotate(targetView.transform, sender.rotation)
+            sender.rotation = 0
+        }
+    }
+}
+
+extension FaceViewController: UIGestureRecognizerDelegate {
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

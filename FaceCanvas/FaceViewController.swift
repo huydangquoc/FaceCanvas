@@ -98,6 +98,20 @@ class FaceViewController: UIViewController {
             newlyCreatedFace.center = CGPoint(x: newlyCreatedFaceOriginalCenter.x + translation.x,
                                               y: newlyCreatedFaceOriginalCenter.y + translation.y)
             
+        case .Ended:
+            // get end point base on tray view
+            let point = sender.locationInView(trayView)
+            // check if end point inside tray view
+            if trayView.pointInside(point, withEvent: nil) {
+                // move back to original place
+                UIView.animateWithDuration(0.6, animations: {
+                    self.newlyCreatedFace.center = self.newlyCreatedFaceOriginalCenter
+                }, completion: { (successed: Bool) in
+                    // remove this image from view
+                    self.newlyCreatedFace.removeFromSuperview()
+                })
+            }
+            
         default:
             break
         }
